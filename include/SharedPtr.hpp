@@ -32,13 +32,13 @@ public:
 		ptr =pobject;
 		count = new Count();
 		count->increase();
-	};
+ 	}
 	SharedPtr(const SharedPtr& r)// Копрование 
 	{
 		ptr = r.ptr;
 		count = r.count;
 		count->increase();
-	};
+	}
 	SharedPtr(SharedPtr&& r)//Конструктор перемещения 
 	{
 		ptr = r.ptr;
@@ -63,14 +63,14 @@ public:
 		}
 	}
 
-	auto opeartor = (const SharedPtr& r)->SharedPtr&
+	auto operator = (const SharedPtr& r)->SharedPtr&
 	{
 		ptr = r.ptr;
 		count = r.count;
 		count->increase();
 	}
 
-	auto opeartor = (SharedPtr&& r)->SharedPtr&
+	auto operator = (SharedPtr&& r)->SharedPtr&
 	{
 		ptr = r.ptr;
 		count = r.count;
