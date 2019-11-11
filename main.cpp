@@ -1,4 +1,4 @@
-#include "SharedPtr.h"
+#include "SharedPtr.hpp"
 #include <iostream>
 #include <atomic>
 
