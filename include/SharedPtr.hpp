@@ -94,11 +94,6 @@ public:
 	}
 	void swap(SharedPtr& r)
 	{
-		if (&r == this)
-		{
-			return;
-		}
-
 		std::swap(ptr, r.ptr);
 		std::swap(count, r.count);
 	}
