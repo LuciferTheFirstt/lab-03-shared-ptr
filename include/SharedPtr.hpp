@@ -61,7 +61,7 @@ public:
 		count = r.count;
 		r.ptr = nullptr;
 		r.count = nullptr;
-		return *this;
+		/*return *this;*/
 	}
 
 	// проверяет, указывает ли указатель на объект
@@ -79,21 +79,43 @@ public:
 		return ptr;
 	}
 
-	auto get()->T*
+	auto get()->T* //Возврад указателя на объект 
 	{
 		return ptr;
 	}
-
+	//заменяет объект, которым владеет
 	void reset()
 	{
-		*this = SharedPtr();
+		if (count != nullptr)
+		{
+			count->decrease();
+			if (count->refcount() == 0)
+			{
+				delete ptr;
+				delete count;
+			}
+			ptr = nullptr;
+			count = nullptr;
+		}
 	}
 	void reset(T* ptr)
 	{
-		*this = SharedPtr(ptr);
+		 if(count != nullptr)
+        {
+            count->decrease();
+            if(count ->refcount() == 0)
+            {
+                delete ptr;
+                delete count;
+            }
+        }
+        ptr = ptr;
+       count = new Count();
+        count->increase();
 	}
 	void swap(SharedPtr& r)
 	{
+
 		std::swap(ptr, r.ptr);
 		std::swap(count, r.count);
 	}
@@ -130,5 +152,4 @@ private:
 	T* ptr;
 	Count* count;
 };
-
 
