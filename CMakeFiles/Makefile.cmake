@@ -38,6 +38,5 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
-  "CMakeFiles/SharedPtr.dir/DependInfo.cmake"
   "CMakeFiles/test_shared.dir/DependInfo.cmake"
   )

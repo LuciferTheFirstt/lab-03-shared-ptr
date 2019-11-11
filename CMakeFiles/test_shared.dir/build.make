@@ -90,7 +90,6 @@ test_shared_EXTERNAL_OBJECTS =
 
 test_shared: CMakeFiles/test_shared.dir/main.cpp.o
 test_shared: CMakeFiles/test_shared.dir/build.make
-test_shared: libSharedPtr.a
 test_shared: CMakeFiles/test_shared.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab03/lab-03-shared-ptr/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable test_shared"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_shared.dir/link.txt --verbose=$(VERBOSE)

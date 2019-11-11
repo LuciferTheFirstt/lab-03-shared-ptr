@@ -1,5 +1,4 @@
 /home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab03/lab-03-shared-ptr/CMakeFiles/rebuild_cache.dir
 /home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab03/lab-03-shared-ptr/CMakeFiles/edit_cache.dir
-/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab03/lab-03-shared-ptr/CMakeFiles/test.dir
-/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab03/lab-03-shared-ptr/CMakeFiles/SharedPtr.dir
 /home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab03/lab-03-shared-ptr/CMakeFiles/test_shared.dir
+/home/luciferthefirstt/LuciferTheFirstt/workspace/workspace/projects/AL/lab03/lab-03-shared-ptr/CMakeFiles/test.dir

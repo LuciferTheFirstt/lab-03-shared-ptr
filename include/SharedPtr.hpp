@@ -1,6 +1,7 @@
 #include <iostream>
 #include <atomic>
 
+
 class Count {
 public:
 	Count() {
@@ -32,14 +33,14 @@ public:
 		ptr =pobject;
 		count = new Count();
 		count->increase();
- 	}
-	SharedPtr(const SharedPtr& r)// Копрование 
+	}
+	SharedPtr(const SharedPtr<T>& r)// Копрование 
 	{
 		ptr = r.ptr;
 		count = r.count;
 		count->increase();
 	}
-	SharedPtr(SharedPtr&& r)//Конструктор перемещения 
+	SharedPtr(SharedPtr<T>&& r)//Конструктор перемещения 
 	{
 		ptr = r.ptr;
 		count = r.count;
@@ -47,35 +48,20 @@ public:
 		r.count = nullptr;
 	}
 
-	~SharedPtr()
-	{
-		if (count != nullptr)
-		{
-			if (count->refcount() > 1)
-			{
-				count->decrease();
-			}
-			else
-			{
-				delete ptr;
-				delete count;
-			}
-		}
-	}
-
-	auto operator = (const SharedPtr& r)->SharedPtr&
+	auto operator = (const SharedPtr<T>& r)->SharedPtr<T>&
 	{
 		ptr = r.ptr;
 		count = r.count;
 		count->increase();
 	}
 
-	auto operator = (SharedPtr&& r)->SharedPtr&
+	auto operator = (SharedPtr<T>&& r)->SharedPtr<T>&
 	{
 		ptr = r.ptr;
 		count = r.count;
 		r.ptr = nullptr;
 		r.count = nullptr;
+		return *this;
 	}
 
 	// проверяет, указывает ли указатель на объект
@@ -121,7 +107,7 @@ public:
 	{
 		if (ptr != nullptr)
 		{
-			return *count;
+			return count->refcount();
 		}
 		else
 		{
@@ -129,8 +115,25 @@ public:
 		}
 	}
 
+~SharedPtr()
+	{
+		if (count != nullptr)
+		{
+			if (count->refcount() > 1)
+			{
+				count->decrease();
+			}
+			else
+			{
+				delete ptr;
+				delete count;
+			}
+		}
+	}
+
 private:
 	T* ptr;
 	Count* count;
 };
+
 

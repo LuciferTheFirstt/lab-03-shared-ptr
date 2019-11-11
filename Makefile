@@ -122,19 +122,6 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named SharedPtr
-
-# Build rule for target.
-SharedPtr: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 SharedPtr
-.PHONY : SharedPtr
-
-# fast build rule for target.
-SharedPtr/fast:
-	$(MAKE) -f CMakeFiles/SharedPtr.dir/build.make CMakeFiles/SharedPtr.dir/build
-.PHONY : SharedPtr/fast
-
-#=============================================================================
 # Target rules for targets named test_shared
 
 # Build rule for target.
@@ -182,9 +169,8 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
-	@echo "... test"
-	@echo "... SharedPtr"
 	@echo "... test_shared"
+	@echo "... test"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
