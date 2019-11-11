@@ -1,6 +1,5 @@
 #include <iostream>
 #include <atomic>
-#include "pch.h"
 
 class Count {
 public:
