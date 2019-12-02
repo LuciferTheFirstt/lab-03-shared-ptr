@@ -63,11 +63,13 @@ public:
 	}
 
 	auto operator = (SharedPtr<T>&& r)->SharedPtr<T>&
-	{
-		ptr = r.ptr;
-		count = r.count;
-		r.ptr = nullptr;
-		r.count = nullptr;
+	{	if(*this !=r) 
+ 		{
+		 ptr = r.ptr;
+		 count = r.count;
+		 r.ptr = nullptr;
+		 r.count = nullptr;
+		}
 	}
 
 	// проверяет, указывает ли указатель на объект
