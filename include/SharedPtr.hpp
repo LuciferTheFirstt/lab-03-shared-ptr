@@ -19,7 +19,7 @@ public:
 	}
 
 private:
-	std::atomic_uint cnt;
+	std::atomic_uint cnt; //Шаблон atomic позволяетбезопасно использоваться в разных потоках. 
 };
 
 
@@ -28,6 +28,13 @@ template <typename T>
 class SharedPtr {
 public:
 	SharedPtr() :ptr(nullptr),count(nullptr) {};//По умолчанию
+	/*SharedPtr()
+	  {
+	    ptr=nullptr;
+	    count=nullptr;
+	  }*/
+
+
 	SharedPtr(T* pobject)//Принимает на вход указатель
 	{
 		ptr =pobject;
@@ -61,7 +68,6 @@ public:
 		count = r.count;
 		r.ptr = nullptr;
 		r.count = nullptr;
-		/*return *this;*/
 	}
 
 	// проверяет, указывает ли указатель на объект
