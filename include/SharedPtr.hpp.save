@@ -4,17 +4,21 @@
 
 class Count {
 public:
-	Count() {
+	Count()
+	{
 		cnt = 0;
 	}
 
-	void increase() {
+	void increase()
+	{
 		cnt++;
 	}
-	void decrease() {
+	void decrease()
+	{
 		cnt--;
 	}
-	int refcount() {
+	int refcount()
+	{
 		return cnt;
 	}
 
@@ -27,17 +31,16 @@ private:
 template <typename T>
 class SharedPtr {
 public:
-	SharedPtr() :ptr(nullptr),count(nullptr) {};//По умолчанию
+	SharedPtr() :ptr(nullptr), count(nullptr) {};//По умолчанию
 	/*SharedPtr()
 	  {
-	    ptr=nullptr;
-	    count=nullptr;
+		ptr=nullptr;
+		count=nullptr;
 	  }*/
-
 
 	SharedPtr(T* pobject)//Принимает на вход указатель
 	{
-		ptr =pobject;
+		ptr = pobject;
 		count = new Count();
 		count->increase();
 	}
@@ -61,14 +64,14 @@ public:
 		count = r.count;
 		count->increase();
 	}
-
 	auto operator = (SharedPtr<T>&& r)->SharedPtr<T>&
-	{	if(*this !=r) 
- 		{
-		 ptr = r.ptr;
-		 count = r.count;
-		 r.ptr = nullptr;
-		 r.count = nullptr;
+	{
+		if (*this != r)
+		{
+			ptr = r.ptr;
+			count = r.count;
+			r.ptr = nullptr;
+			r.count = nullptr;
 		}
 	}
 
@@ -81,51 +84,47 @@ public:
 	{
 		return *ptr;
 	}
-
 	auto operator->() const->T*
 	{
 		return ptr;
 	}
-
 	auto get()->T* //Возврад указателя на объект 
 	{
 		return ptr;
 	}
-
-void decrease()
-{
-	count->decrease();
-	if (count->refcount() == 0)
-	{
-		delete ptr;
-		delete count;	
-	}
-}
 
 	//заменяет объект, которым владеет
 	void reset()
 	{
 		if (count != nullptr)
 		{
-			void decrease();
+			count->decrease();
+			if (count->refcount() == 0)
+			{
+				delete ptr;
+				delete count;
+			}
 			ptr = nullptr;
 			count = nullptr;
 		}
 	}
 	void reset(T* ptr)
 	{
-		 if(count != nullptr)
-        {
-		void decrease();
-        }
-        }
-        ptr = ptr;
-       count = new Count();
-        count->increase();
+		if (count != nullptr)
+		{
+			count->decrease();
+			if (count->refcount() == 0)
+			{
+				delete ptr;
+				delete count;
+			}
+		}
+		ptr = ptr;
+		count = new Count();
+		count->increase();
 	}
 	void swap(SharedPtr& r)
 	{
-
 		std::swap(ptr, r.ptr);
 		std::swap(count, r.count);
 	}
@@ -142,7 +141,7 @@ void decrease()
 		}
 	}
 
-~SharedPtr()
+	~SharedPtr()
 	{
 		if (count != nullptr)
 		{
