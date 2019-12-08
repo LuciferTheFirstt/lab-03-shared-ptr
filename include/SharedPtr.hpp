@@ -118,7 +118,7 @@ void decrease()
         {
 		void decrease();
         }
-        }
+        
         ptr = ptr;
        count = new Count();
         count->increase();
