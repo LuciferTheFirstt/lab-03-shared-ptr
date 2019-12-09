@@ -63,7 +63,7 @@ public:
 	}
 
 	auto operator = (SharedPtr<T>&& r)->SharedPtr<T>&
-	{	if(*this !=r) 
+	{	if(*this !=&r) 
  		{
 		 ptr = r.ptr;
 		 count = r.count;
