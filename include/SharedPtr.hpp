@@ -60,6 +60,7 @@ public:
 		ptr = r.ptr;
 		count = r.count;
 		count->increase();
+		return this;
 	}
 
 	auto operator = (SharedPtr<T>&& r)->SharedPtr<T>&
