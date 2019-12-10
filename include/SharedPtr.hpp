@@ -60,7 +60,7 @@ public:
 		ptr = r.ptr;
 		count = r.count;
 		count->increase();
-	//	return this;
+		return this;
 	}
 
 	auto operator = (SharedPtr<T>&& r)->SharedPtr<T>&
@@ -70,7 +70,7 @@ public:
 		 count = r.count;
 		 r.ptr = nullptr;
 		 r.count = nullptr;
-		// return *this;
+		 return *this;
 		}
 	}
 
@@ -94,15 +94,15 @@ public:
 		return ptr;
 	}
 
-void decrease()
-{
-	count->decrease();
-	if (count->refcount() == 0)
+	void decrease()
 	{
-		delete ptr;
-		delete count;	
+		count->decrease();
+		if (count->refcount() == 0)
+		{
+			delete ptr;
+			delete count;	
+		}
 	}
-}
 
 	//заменяет объект, которым владеет
 	void reset()
@@ -122,7 +122,7 @@ void decrease()
         }
         
         ptr = ptr;
-       count = new Count();
+        count = new Count();
         count->increase();
 	}
 	void swap(SharedPtr& r)
