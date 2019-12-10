@@ -70,7 +70,7 @@ public:
 		 count = r.count;
 		 r.ptr = nullptr;
 		 r.count = nullptr;
-		 return *this;
+		// return *this;
 		}
 	}
 
