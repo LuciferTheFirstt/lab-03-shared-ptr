@@ -4,9 +4,10 @@
 
 class Count {
 public:
-	Count() {
-		cnt = 0;
-	}
+	Count() : cnt(0) {}
+	
+	Count( const Count& ) = delete;
+	Count& operator=( const Count& ) = delete;
 
 	void increase() {
 		cnt++;
@@ -17,9 +18,28 @@ public:
 	int refcount() {
 		return cnt;
 	}
+	
+	void operator++()
+	{
+		cnt++;
+	}
+
+	void operator++( int )
+	{
+		cnt++;
+	}
+
+	void operator--()
+	{
+		cnt--;
+	}
+	void operator--( int )
+	{
+		cnt--;
+	}
 
 private:
-	std::atomic_uint cnt; //Шаблон atomic позволяетбезопасно использоваться в разных потоках. 
+	std::atomic_uint cnt;
 };
 
 
@@ -27,58 +47,36 @@ private:
 template <typename T>
 class SharedPtr {
 public:
-	SharedPtr() :ptr(nullptr),count(nullptr) {};//По умолчанию
-	/*SharedPtr()
-	  {
-	    ptr=nullptr;
-	    count=nullptr;
-	  }*/
+	SharedPtr( T* pobject = nullptr );
+	SharedPtr( const SharedPtr<T>& r );
+	SharedPtr( SharedPtr<T>&& r );
 
-
-	SharedPtr(T* pobject)//Принимает на вход указатель
-	{
-		ptr =pobject;
-		count = new Count();
-		count->increase();
-	}
-	SharedPtr(const SharedPtr<T>& r)// Копрование 
+	auto operator = ( const SharedPtr<T>& r )->SharedPtr<T>&
 	{
 		ptr = r.ptr;
 		count = r.count;
 		count->increase();
-	}
-	SharedPtr(SharedPtr<T>&& r)//Конструктор перемещения 
-	{
-		ptr = r.ptr;
-		count = r.count;
-		r.ptr = nullptr;
-		r.count = nullptr;
+		return *this;
 	}
 
-	auto operator = (const SharedPtr<T>& r)->SharedPtr<T>&
+	auto operator = ( SharedPtr<T>&& r )->SharedPtr<T>&
 	{
-		ptr = r.ptr;
-		count = r.count;
-		count->increase();
-		return this;
-	}
-
-	auto operator = (SharedPtr<T>&& r)->SharedPtr<T>&
-	{	if(*this !=r) 
- 		{
-		 ptr = r.ptr;
-		 count = r.count;
-		 r.ptr = nullptr;
-		 r.count = nullptr;
-		 return *this;
+		if( *this != r )
+		{
+			ptr = r.ptr;
+			count = r.count;
+			r.ptr = nullptr;
+			r.count = nullptr;
 		}
+		return *this;
 	}
 
-	// проверяет, указывает ли указатель на объект
+	
 	operator bool() const
 	{
 		return ptr != nullptr;
 	}
+
 	auto operator*() const->T&
 	{
 		return *ptr;
@@ -89,79 +87,101 @@ public:
 		return ptr;
 	}
 
-	auto get()->T* //Возврад указателя на объект 
+	auto get()->T*;
+
+	void decrease();
+
+	
+	void reset( T* ptr_ = nullptr )
 	{
-		return ptr;
+		SharedPtr<T> new_ptr(ptr_);
+		this->swap( new_ptr );
 	}
 
-	void decrease()
-	{
-		count->decrease();
-		if (count->refcount() == 0)
-		{
-			delete ptr;
-			delete count;	
-		}
-	}
+	void swap( SharedPtr& r );
+	
+	auto use_count() const->size_t;
 
-	//заменяет объект, которым владеет
-	void reset()
-	{
-		if (count != nullptr)
-		{
-			void decrease();
-			ptr = nullptr;
-			count = nullptr;
-		}
-	}
-	void reset(T* ptr)
-	{
-		 if(count != nullptr)
-        {
-		void decrease();
-        }
-        
-        ptr = ptr;
-        count = new Count();
-        count->increase();
-	}
-	void swap(SharedPtr& r)
-	{
-
-		std::swap(ptr, r.ptr);
-		std::swap(count, r.count);
-	}
-	// возвращает количество объектов SharedPtr, которые ссылаются на тот же управляемый объект
-	auto use_count() const->size_t
-	{
-		if (ptr != nullptr)
-		{
-			return count->refcount();
-		}
-		else
-		{
-			return 0;
-		}
-	}
-
-~SharedPtr()
-	{
-		if (count != nullptr)
-		{
-			if (count->refcount() > 1)
-			{
-				count->decrease();
-			}
-			else
-			{
-				delete ptr;
-				delete count;
-			}
-		}
-	}
+	~SharedPtr();
 
 private:
 	T* ptr;
 	Count* count;
 };
 
+
+template<typename T>
+inline SharedPtr<T>::SharedPtr( T* pobject )
+{
+	ptr = pobject;
+	count = new Count();
+	if( pobject ) {
+		count->increase();
+	}
+}
+
+template<typename T>
+inline SharedPtr<T>::SharedPtr( const SharedPtr<T>& r) 
+{
+	ptr = r.ptr;
+	count = r.count;
+	count->increase();
+}
+
+template<typename T>
+inline SharedPtr<T>::SharedPtr( SharedPtr<T>&& r )
+{
+	ptr = r.ptr;
+	count = r.count;
+	r.ptr = nullptr;
+	r.count = nullptr;
+}
+
+template<typename T>
+inline auto SharedPtr<T>::get() -> T*
+{
+	return ptr;
+}
+
+template<typename T>
+inline void SharedPtr<T>::decrease()
+{
+	count->decrease();
+	if( count->refcount() == 0 )
+	{
+		delete ptr;
+		delete count;
+	}
+}
+
+
+template<typename T>
+inline void SharedPtr<T>::swap( SharedPtr& r )
+{
+	std::swap( ptr, r.ptr );
+	std::swap( count, r.count );
+}
+
+
+template<typename T>
+inline auto SharedPtr<T>::use_count() const -> size_t
+{
+	return count->refcount();
+}
+
+template<typename T>
+inline SharedPtr<T>::~SharedPtr()
+{
+	if( count != nullptr )
+	{
+		if( count->refcount() > 1 )
+		{
+			count->decrease();
+		}
+		else
+		{
+			delete ptr;
+			delete count;
+		}
+	}
+}
